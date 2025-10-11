@@ -76,12 +76,40 @@ class Program:
         if self.op == 'Sequence':
             grid = self.left.apply_program(grid) if self.left is not None else grid
             grid = self.right.apply_program(grid) if self.right is not None else grid
-            
+
         elif self.op == 'ColorChange':
             old_color, new_color = self.right if self.right else (None, None)
             for i in range(len(grid)):
                 for j in range(len(grid[i])):
                     if grid[i][j] == old_color:
                         grid[i][j] = new_color
+
+        elif self.op == 'Mirror':
+            axis = self.right
+
+            if axis == 'horizontal':
+                grid = grid[::-1]
+            elif axis == 'vertical':
+                grid = [row[::-1] for row in grid]
+
+        elif self.op == 'Rotate':
+            degrees = self.right
+
+            if degrees == 90:
+                grid = [[grid[len(grid) - 1 - j][i] for j in range(len(grid))] for i in range(len(grid[0]))]
+            elif degrees == 180:
+                grid = [[grid[len(grid) - 1 - i][len(grid[0]) - 1 - j] for j in range(len(grid[0]))] for i in range(len(grid))]
+            elif degrees == 270:
+                grid = [[grid[j][len(grid[0]) - 1 - i] for j in range(len(grid))] for i in range(len(grid[0]))]
+
+        elif self.op == 'SwapColors':
+            color1, color2 = self.right if self.right else (None, None)
+
+            for i in range(len(grid)):
+                for j in range(len(grid[0])):
+                    if grid[i][j] == color1:
+                        grid[i][j] = color2
+                    elif grid[i][j] == color2:
+                        grid[i][j] = color1
 
         return grid
