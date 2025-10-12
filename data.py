@@ -1,36 +1,29 @@
 import json
+from os import error
 
 class Data:
-    num_data_points = 100
+    def __init__(self, id, train, test, solution) -> None:
+        self.id = id
+        self.train = train
+        self.test = test
 
-    def __init__(self) -> None:
-        self.ids = []
-        self.train_data = []
-        self.test_data = []
-        self.solution_data = []
+def get_data(limit=-1):
+    data_set = {}
 
-        with open("./benchmark/arc-agi_challenges.json") as file:
-            file = json.load(file)
-            
-            for id, data_set in list(file.items())[:Data.num_data_points]:
-                self.ids.append(id)
-                self.train_data.append(data_set["train"])
-                self.test_data.append(data_set["test"])
+    with open("./benchmark/arc-agi_challenges.json") as file:
+        file = json.load(file)
 
-        with open("./benchmark/arc-agi_solutions.json") as file:
-            file = json.load(file)
+        for id, data in list(file.items()) if limit == -1 else list(file.items())[:limit]:
+            data_set[id] = Data(id, data['train'], data['test'], None)
 
-            for id, data_set in list(file.items())[:Data.num_data_points]:
-                self.solution_data.append(data_set)
+    with open("./benchmark/arc-agi_solutions.json") as file:
+        file = json.load(file)
 
-    def get_ids(self):
-        return self.ids
+        for id, data in list(file.items()) if limit == -1 else list(file.items())[:limit]:
+            if data_set[id]:
+                for index, value in enumerate(data_set[id].test):
+                    value['output'] = data[index]
+            else:
+                error("Missing Solutions for available challenges")
 
-    def get_train_data(self):
-        return self.train_data
-    
-    def get_test_data(self):
-        return self.test_data
-    
-    def get_solution_data(self):
-        return self.solution_data
+    return data_set
