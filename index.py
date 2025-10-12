@@ -1,48 +1,38 @@
 import time
-from data import Data
+import data
 from search import Search
 
-data = Data()
 search = Search()
 
-ids = data.get_ids()
-train_data = data.get_train_data()
-solution_data = data.get_solution_data()
+# Get data set
+num_data = 6
+data_set = data.get_data(num_data)
 
-num_challenges = len(train_data)
+def test_search_algorithm(search_function):
+    start_time = time.time()
+    trained = 0
+    solved = 0
 
-## BFS Search
-# Iterate over training data
-train_solutions = []
+    for data in data_set.values():
+        sol_program = search_function(data.train)
 
-bfs_start = time.time() # Log Start Time
-num_trained = 0
+        if sol_program is None:
+            continue
 
-for i, in_out_pair in enumerate(train_data):
-    print(f"Solving {ids[i]} : {i}/{num_challenges}", end='\r')
+        trained += 1
 
-    sol = search.bfs(in_out_pair)
-    train_solutions.append(sol)
+        print(data.test)
 
-    # Count train solutions found
-    if not (sol.left is None and sol.right is None):
-        num_trained += 1
+        if search.validate_program(sol_program, data.test):
+            solved += 1
 
-bfs_time_taken = time.time() - bfs_start # Calculate wall clock time
-test_data = data.get_test_data()
-num_solved = 0
+    return time.time() - start_time, trained / num_data * 100, solved / num_data * 100, 
 
-for i, inputs in enumerate(test_data):
-    solution = train_solutions[i]
+# BFS Search
+bfs_results = test_search_algorithm(search.bfs)
 
-    # Count correct solutions
-    test_cases = [{'input': test_case['input'], 'output': output_grid} for test_case, output_grid in zip(inputs, solution_data[i])]
-    if search.validate_program(solution, test_cases):
-        num_solved += 1
-
-
-print(f"================================")
-print(f"| Alg | Time | Train % | Sol % |")
-print(f"================================")
-print(f"| BFS | {bfs_time_taken:3.0f}s | {(num_trained / len(train_data) * 100):6.2f}% | {(num_solved / len(train_data) * 100):4.2f}% |")
-print(f"================================")
+print(f"==================================")
+print(f"| Alg | Time | Train % |  Sol %  |")
+print(f"==================================")
+print(f"| BFS | {bfs_results[0]:3.0f}s | {bfs_results[1]:6.2f}% | {bfs_results[2]:6.2f}% |")
+print(f"==================================")
