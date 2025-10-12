@@ -5,14 +5,14 @@ from program import Program
 operations = Operations()
 
 class Search:
-    def bfs(self, in_out_pair, max_complexity=3):
+    def bfs(self, data, max_complexity=3):
         # Edge case complexity 0
-        if self.validate_program(Program(), in_out_pair):
+        if self.validate_program(Program(), data):
             return Program()
 
         # Queue base operations
         queue = deque()
-        ops_array = operations.get_base_operations(in_out_pair[0]['input'])
+        ops_array = operations.get_base_operations(data[0]['input'])
 
         # Add complexity 1 solutions
         for op in ops_array:
@@ -23,7 +23,7 @@ class Search:
             program: Program = queue.popleft()
 
             # Validate solution
-            if self.validate_program(program, in_out_pair):
+            if self.validate_program(program, data):
                 return program
             
             # Sequence new programs
@@ -31,11 +31,11 @@ class Search:
                 for op in ops_array:
                     queue.append(Program('Sequence', program, op))
         
-        return Program()
+        return None
 
-    def validate_program(self, program: Program, in_out_pair):
-        for data_point in in_out_pair:
-            if program.apply_program(data_point['input']) != data_point['output']:
+    def validate_program(self, program: Program, data):
+        for dp in data:
+            if program.apply_program(dp['input']) != dp['output']:
                 return False
             
         return True
