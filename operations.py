@@ -1,4 +1,5 @@
 from program import Program
+from random import shuffle
 
 class Operations:
     def get_base_operations(self, grid=None) -> list[Program]:
@@ -18,6 +19,8 @@ class Operations:
         # Positional Shift
         operations += [Program('PositionalShift', None, right=[i, j, x, y]) for i in colors for j in range(0, 10) if i != j for x in range(-1, 2) for y in range(-1, 2)]
 
+        # Randomize the order
+        shuffle(operations)
         return operations
 
     def _iterate_color_operations(self, op: str) -> list[Program]:
