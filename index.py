@@ -1,10 +1,9 @@
 import time
 import data
-from search import Search
 from heuristics import Heuristics
+from search import Search
 
 search = Search()
-heuristics = Heuristics()
 
 # Get data set
 num_data = 6
@@ -40,22 +39,53 @@ def test_search_algorithm(search_function):
 # BFS Search
 bfs_results = test_search_algorithm(search.bfs)
 
-# GBFS Search with heuristic
-def gbfs_runner(train):
-    return search.gbfs_search(train, heuristics)
+# Initialize heuristic instances (to maintain stats)
+cell_h = Heuristics()
+color_h = Heuristics()
+meta_h = Heuristics()
 
-gbfs_results = test_search_algorithm(gbfs_runner)
+# GBFS with different heuristics
+def gbfs_cell_runner(train):
+    return search.gbfs_search(train, cell_h.mismatch_sum)
 
-# A* Search with heuristic
-def astar_runner(train):
-    return search.a_star_search(train, heuristics)
+def gbfs_color_runner(train):
+    return search.gbfs_search(train, color_h.color_dist_shape)
 
-astar_results = test_search_algorithm(astar_runner)
+def gbfs_meta_runner(train):
+    return search.gbfs_search(train, meta_h.meta_heuristic)
 
-print(f"==============================================================")
-print(f"| Alg  | Avg Train Time | Avg Solve Time | Train % |  Sol %  |")
-print(f"==============================================================")
-print(f"| BFS  | {bfs_results[0]*10**6:12.0f}μs | {bfs_results[1]*10**9:12.0f}ns | {bfs_results[2]:6.2f}% | {bfs_results[3]:6.2f}% |")
-print(f"| GBFS | {gbfs_results[0]*10**6:12.0f}μs | {gbfs_results[1]*10**9:12.0f}ns | {gbfs_results[2]:6.2f}% | {gbfs_results[3]:6.2f}% |")
-print(f"|  A*  | {astar_results[0]*10**6:12.0f}μs | {astar_results[1]*10**9:12.0f}ns | {astar_results[2]:6.2f}% | {astar_results[3]:6.2f}% |")
-print(f"==============================================================")
+gbfs_cell_results = test_search_algorithm(gbfs_cell_runner)
+gbfs_color_results = test_search_algorithm(gbfs_color_runner)
+gbfs_meta_results = test_search_algorithm(gbfs_meta_runner)
+
+# A* with different heuristics
+def astar_cell_runner(train):
+    return search.a_star_search(train, cell_h.mismatch_sum)
+
+def astar_color_runner(train):
+    return search.a_star_search(train, color_h.color_dist_shape)
+
+def astar_meta_runner(train):
+    return search.a_star_search(train, meta_h.meta_heuristic)
+
+astar_cell_results = test_search_algorithm(astar_cell_runner)
+astar_color_results = test_search_algorithm(astar_color_runner)
+astar_meta_results = test_search_algorithm(astar_meta_runner)
+
+
+def format_time(time_val, unit):
+    return f"{time_val:>10.0f}{unit:2}"
+
+print(f"====================================================================")
+print(f"| Algorithm    | Avg Train Time | Avg Solve Time | Train % | Sol % |")
+print(f"====================================================================")
+print(f"| BFS          |   {format_time(bfs_results[0]*10**6, 'μs')} |   {format_time(bfs_results[1]*10**9, 'ns')} | {bfs_results[2]:5.1f}%  | {bfs_results[3]:4.1f}% |")
+print(f"|--------------|----------------|----------------|---------|-------|")
+print(f"| GBFS (Cell)  |   {format_time(gbfs_cell_results[0]*10**6, 'μs')} |   {format_time(gbfs_cell_results[1]*10**9, 'ns')} | {gbfs_cell_results[2]:5.1f}%  | {gbfs_cell_results[3]:4.1f}% |")
+print(f"| GBFS (Color) |   {format_time(gbfs_color_results[0]*10**6, 'μs')} |   {format_time(gbfs_color_results[1]*10**9, 'ns')} | {gbfs_color_results[2]:5.1f}%  | {gbfs_color_results[3]:4.1f}% |")
+print(f"| GBFS (Meta)  |   {format_time(gbfs_meta_results[0]*10**6, 'μs')} |   {format_time(gbfs_meta_results[1]*10**9, 'ns')} | {gbfs_meta_results[2]:5.1f}%  | {gbfs_meta_results[3]:4.1f}% |")
+print(f"|--------------|----------------|----------------|---------|-------|")
+print(f"| A* (Cell)    |   {format_time(astar_cell_results[0]*10**6, 'μs')} |   {format_time(astar_cell_results[1]*10**9, 'ns')} | {astar_cell_results[2]:5.1f}%  | {astar_cell_results[3]:4.1f}% |")
+print(f"| A* (Color)   |   {format_time(astar_color_results[0]*10**6, 'μs')} |   {format_time(astar_color_results[1]*10**9, 'ns')} | {astar_color_results[2]:5.1f}%  | {astar_color_results[3]:4.1f}% |")
+print(f"| A* (Meta)    |   {format_time(astar_meta_results[0]*10**6, 'μs')} |   {format_time(astar_meta_results[1]*10**9, 'ns')} | {astar_meta_results[2]:5.1f}%  | {astar_meta_results[3]:4.1f}% |")
+print(f"====================================================================")
