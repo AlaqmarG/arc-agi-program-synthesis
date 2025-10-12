@@ -70,6 +70,34 @@ class Program:
     def __eq__(self, other):
         return self.op == other.op and self.left == other.left and self.right == other.right
     
+    def _resize(self, input_grid, size_w, size_h, scale_mode=False):
+        new_grid = []
+        
+        for i in range(size_h):
+            new_row = []
+            
+            for j in range(size_w):
+                if scale_mode:
+                    # Calculate scale factors, handle division by zero
+                    scale_h = size_h // len(input_grid) if len(input_grid) > 0 else 1
+                    scale_w = size_w // len(input_grid[0]) if len(input_grid[0]) > 0 else 1
+                    
+                    # Ensure scale factors are at least 1
+                    scale_h = max(1, scale_h)
+                    scale_w = max(1, scale_w)
+                    
+                    orig_i = min(i // scale_h, len(input_grid) - 1)
+                    orig_j = min(j // scale_w, len(input_grid[0]) - 1)
+                else:
+                    # For irregular resize, use min to clamp coordinates
+                    orig_i = min(i, len(input_grid) - 1)
+                    orig_j = min(j, len(input_grid[0]) - 1)
+                new_row.append(input_grid[orig_i][orig_j])
+            
+            new_grid.append(new_row)
+        
+        return new_grid
+
     def apply_program(self, input_grid):
         grid = [row[:] for row in input_grid]
 
@@ -112,4 +140,51 @@ class Program:
                     elif grid[i][j] == color2:
                         grid[i][j] = color1
 
+        elif self.op == 'Scale2x2':
+            grid = self._resize(input_grid, 2 * len(input_grid[0]), 2 * len(input_grid), scale_mode=True)
+
+        elif self.op == 'Scale3x3':
+            grid = self._resize(input_grid, 3 * len(input_grid[0]), 3 * len(input_grid), scale_mode=True)
+
+        elif self.op == "Scale2x1":
+            grid = self._resize(input_grid, 2 * len(input_grid[0]), 1 * len(input_grid), scale_mode=True)
+
+        elif self.op == "Scale1x2":
+            grid = self._resize(input_grid, 1 * len(input_grid[0]), 2 * len(input_grid), scale_mode=True)
+
+        elif self.op == 'PositionalShift':
+            old_color = self._get(0)
+            new_color = self._get(1)
+            new_color = int(new_color) if new_color is not None else 0
+
+            dr = self._get(2)
+            dc = self._get(3)
+            dr = int(dr) if dr is not None else 0
+            dc = int(dc) if dc is not None else 0
+
+            m, n = len(grid), len(grid[0]) if grid else 0
+            new_grid = [[0 for _ in range(n)] for _ in range(m)]
+
+            for r in range(m):
+                for c in range(n):
+                    if grid[r][c] == old_color:
+                        new_c = c + dc
+                        new_r = r
+                        while new_c >= n:
+                            new_c -= n
+                            new_r += 1
+                        if new_r >= m:
+                            new_r -= m
+                        if new_grid[new_r][new_c] == 0:
+                            new_grid[new_r][new_c] = new_color
+                        else:
+                            new_grid[new_r][new_c] += new_color
+
+            for r in range(m):
+                for c in range(n):
+                    if grid[r][c] != old_color and new_grid[r][c] == 0:
+                        new_grid[r][c] = grid[r][c]
+
+            grid = new_grid
+            
         return grid

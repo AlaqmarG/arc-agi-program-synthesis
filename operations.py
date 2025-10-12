@@ -12,6 +12,12 @@ class Operations:
         colors = self._get_colors_in_grid(grid)
         operations += [Program("SwapColors", right=[i, j]) for i in colors for j in colors if i != j]
 
+        # Scale Operations
+        operations += [Program(i) for i in ['Scale2x2', 'Scale3x3', 'Scale1x2', 'Scale2x1']]
+
+        # Positional Shift
+        operations += [Program('PositionalShift', None, right=[i, j, x, y]) for i in colors for j in range(0, 10) if i != j for x in range(-1, 2) for y in range(-1, 2)]
+
         return operations
 
     def _iterate_color_operations(self, op: str) -> list[Program]:
