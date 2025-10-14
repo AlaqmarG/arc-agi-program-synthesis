@@ -8,13 +8,16 @@ operations = Operations()
 
 class Search:
     def bfs(self, data, max_complexity=3):
+        programs_checked = 0
+        
         # Edge case complexity 0
         if self.validate_program(Program(), data):
             return Program()
 
         # Queue base operations
         queue = deque()
-        ops_array = operations.get_base_operations(data[0]['input'])
+        ops_array = operations.get_base_operations(data[0]['input'], data[0]['output'])
+        num_base_ops = len(ops_array)
 
         # Add complexity 1 solutions
         for op in ops_array:
@@ -23,27 +26,40 @@ class Search:
         # Run operations and add sequenced program
         while len(queue) > 0:
             program: Program = queue.popleft()
+            
+            if programs_checked % 100000 == 0:
+                print("\033[K", end="", flush=True)
+                print(f"BFS: {programs_checked} programs, complexity: {program.complexity}, queue size: {len(queue)}, base ops: {num_base_ops}", end='\r')
+
+            programs_checked += 1
 
             # Validate solution
             if self.validate_program(program, data):
                 return program
             
             # Sequence new programs
-            if program.complexity != max_complexity:
+            if program.complexity < max_complexity:  # Changed from != to <
                 for op in ops_array:
-                    queue.append(Program('Sequence', program, op))
-        
+                    new_program = Program('Sequence', program, op)
+                    if new_program.complexity <= max_complexity:  # Added explicit check
+                        queue.append(new_program)
+
         return None
 
     def gbfs_search(self, train_data, heuristic_fn, max_complexity=3):
+        programs_checked = 0
+        best_h = float('inf')
+        
         # Edge case of complexity 0
         empty = Program()
         if self.validate_program(empty, train_data):
             return empty
 
-        # Generate base operations from first input example (if available)
+        # Generate base operations from first example (if available)
         first_input = train_data[0]['input'] if train_data else None
-        ops_array = operations.get_base_operations(first_input)
+        first_output = train_data[0]['output'] if train_data else None
+        ops_array = operations.get_base_operations(first_input, first_output)
+        num_base_ops = len(ops_array)
 
         # Priority queue of (h, tie, program)
         heap = []
@@ -52,10 +68,16 @@ class Search:
         # Seed heap with complexity-1 candidates
         for op in ops_array:
             h_val = heuristic_fn(op, train_data)
+            best_h = min(best_h, h_val)
             heappush(heap, (h_val, next(tie_counter), op))
 
         while heap:
-            _, _, program = heappop(heap)
+            h_val, _, program = heappop(heap)
+            programs_checked += 1
+            
+            if programs_checked % 100000 == 0:
+                print("\033[K", end="", flush=True)
+                print(f"GBFS: {programs_checked} programs, cur h: {h_val:.2f}, best h: {best_h:.2f}, heap size: {len(heap)}, base ops: {num_base_ops}", end='\r')
 
             # Check for solution
             if self.validate_program(program, train_data):
@@ -66,35 +88,47 @@ class Search:
                 for op in ops_array:
                     child = Program('Sequence', program, op)
                     h_val = heuristic_fn(child, train_data)
+                    best_h = min(best_h, h_val)
                     heappush(heap, (h_val, next(tie_counter), child))
 
         return None
 
     def a_star_search(self, train_data, heuristic_fn, max_complexity=3):
+        programs_checked = 0
+        best_f = float('inf')
+        debug_level = 1  # Set to higher values for more detailed logging
+        
         # Edge case of complexity 0
         empty = Program()
         if self.validate_program(empty, train_data):
             return empty
 
-        # Generate base operations from first input example (if available)
+        # Generate base operations from first example (if available)
         first_input = train_data[0]['input'] if train_data else None
-        ops_array = operations.get_base_operations(first_input)
+        first_output = train_data[0]['output'] if train_data else None
+        ops_array = operations.get_base_operations(first_input, first_output)
+        num_base_ops = len(ops_array)
 
         # Priority queue of (f, tie, program)
         heap = []
         tie_counter = count()
+        visited = set()  # Track visited program states
 
-        def priority(prog: Program) -> float:
-            g = getattr(prog, 'complexity', 0)
-            h = heuristic_fn(prog, train_data)
-            return g + h
-
-        # Seed heap with complexity-1 candidates
+        # Seed heap with base candidates using weighted cost for g
         for op in ops_array:
-            heappush(heap, (priority(op), next(tie_counter), op))
+            g = op.cost
+            h = heuristic_fn(op, train_data)
+            f = g + h
+            heappush(heap, (f, g, h, next(tie_counter), op))
+            visited.add(str(op))
 
         while heap:
-            _, _, program = heappop(heap)
+            f_val, g_val, h_val, _, program = heappop(heap)
+            programs_checked += 1
+            
+            if programs_checked % 100000 == 0:
+                print("\033[K", end="", flush=True)
+                print(f"A*: {programs_checked} programs, cur f: {f_val:.2f} (g={g_val}, h={h_val:.2f}), heap size: {len(heap)}, base ops: {num_base_ops}", end='\r')
 
             if self.validate_program(program, train_data):
                 return program
@@ -102,7 +136,14 @@ class Search:
             if program.complexity < max_complexity:
                 for op in ops_array:
                     child = Program('Sequence', program, op)
-                    heappush(heap, (priority(child), next(tie_counter), child))
+                    if child.complexity <= max_complexity:
+                        child_str = str(child)
+                        if child_str not in visited:
+                            g = child.cost
+                            h = heuristic_fn(child, train_data)
+                            f = g + h
+                            heappush(heap, (f, g, h, next(tie_counter), child))
+                            visited.add(child_str)
 
         return None
 
