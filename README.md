@@ -346,6 +346,6 @@ This project is licensed under the MIT License — see LICENSE file for details.
 
 <div align="center">
 
-*Built with 🧠 for advancing automated reasoning for Brock University (COSC 3P71)*
+*Built with 🧠 for advancing automated reasoning*
 
 </div>
