@@ -1,8 +1,60 @@
 <div align="center">
 
-<img width="100%" src="https://capsule-render.vercel.app/api?type=waving&color=0:1E1E2F,35:FF6B35,70:E63946,100:2E86AB&height=210&section=header&text=ARC-AGI%20Program%20Synthesis&fontSize=40&fontColor=FFFFFF&animation=fadeIn&fontAlignY=38&desc=Automated%20Visual%20Reasoning%20Through%20Intelligent%20Program%20Search&descAlignY=58&descSize=17&descColor=F5F5F5" alt="banner" />
+# ARC-AGI Program Synthesis
+
+<sub>Automated visual reasoning through intelligent program search</sub>
 
 <br/>
+
+<!--
+  Hero visual: a literal ARC-AGI grid, rendered as an HTML table with
+  inline style="background:#hex" on each <td>. This is deliberate —
+  GitHub's markdown sanitizer strips the legacy bgcolor attribute, which
+  silently renders every cell blank. style="background:#hex" survives
+  sanitization, so this hero can never break the way an external
+  banner-rendering service can.
+-->
+<table>
+<tr>
+<td align="center" valign="middle">
+
+**Input**
+
+<table cellspacing="0" cellpadding="0" style="border-collapse:collapse;border:2px solid #888;margin:0 auto;">
+<tr><td width="20" height="20" style="width:20px;height:20px;background:#AAAAAA;border:1px solid #444;padding:0;line-height:0;font-size:0;"></td><td width="20" height="20" style="width:20px;height:20px;background:#AAAAAA;border:1px solid #444;padding:0;line-height:0;font-size:0;"></td><td width="20" height="20" style="width:20px;height:20px;background:#AAAAAA;border:1px solid #444;padding:0;line-height:0;font-size:0;"></td><td width="20" height="20" style="width:20px;height:20px;background:#000000;border:1px solid #444;padding:0;line-height:0;font-size:0;"></td><td width="20" height="20" style="width:20px;height:20px;background:#000000;border:1px solid #444;padding:0;line-height:0;font-size:0;"></td></tr>
+<tr><td width="20" height="20" style="width:20px;height:20px;background:#AAAAAA;border:1px solid #444;padding:0;line-height:0;font-size:0;"></td><td width="20" height="20" style="width:20px;height:20px;background:#000000;border:1px solid #444;padding:0;line-height:0;font-size:0;"></td><td width="20" height="20" style="width:20px;height:20px;background:#000000;border:1px solid #444;padding:0;line-height:0;font-size:0;"></td><td width="20" height="20" style="width:20px;height:20px;background:#000000;border:1px solid #444;padding:0;line-height:0;font-size:0;"></td><td width="20" height="20" style="width:20px;height:20px;background:#000000;border:1px solid #444;padding:0;line-height:0;font-size:0;"></td></tr>
+<tr><td width="20" height="20" style="width:20px;height:20px;background:#AAAAAA;border:1px solid #444;padding:0;line-height:0;font-size:0;"></td><td width="20" height="20" style="width:20px;height:20px;background:#000000;border:1px solid #444;padding:0;line-height:0;font-size:0;"></td><td width="20" height="20" style="width:20px;height:20px;background:#000000;border:1px solid #444;padding:0;line-height:0;font-size:0;"></td><td width="20" height="20" style="width:20px;height:20px;background:#000000;border:1px solid #444;padding:0;line-height:0;font-size:0;"></td><td width="20" height="20" style="width:20px;height:20px;background:#000000;border:1px solid #444;padding:0;line-height:0;font-size:0;"></td></tr>
+<tr><td width="20" height="20" style="width:20px;height:20px;background:#AAAAAA;border:1px solid #444;padding:0;line-height:0;font-size:0;"></td><td width="20" height="20" style="width:20px;height:20px;background:#000000;border:1px solid #444;padding:0;line-height:0;font-size:0;"></td><td width="20" height="20" style="width:20px;height:20px;background:#000000;border:1px solid #444;padding:0;line-height:0;font-size:0;"></td><td width="20" height="20" style="width:20px;height:20px;background:#000000;border:1px solid #444;padding:0;line-height:0;font-size:0;"></td><td width="20" height="20" style="width:20px;height:20px;background:#000000;border:1px solid #444;padding:0;line-height:0;font-size:0;"></td></tr>
+<tr><td width="20" height="20" style="width:20px;height:20px;background:#AAAAAA;border:1px solid #444;padding:0;line-height:0;font-size:0;"></td><td width="20" height="20" style="width:20px;height:20px;background:#000000;border:1px solid #444;padding:0;line-height:0;font-size:0;"></td><td width="20" height="20" style="width:20px;height:20px;background:#000000;border:1px solid #444;padding:0;line-height:0;font-size:0;"></td><td width="20" height="20" style="width:20px;height:20px;background:#000000;border:1px solid #444;padding:0;line-height:0;font-size:0;"></td><td width="20" height="20" style="width:20px;height:20px;background:#000000;border:1px solid #444;padding:0;line-height:0;font-size:0;"></td></tr>
+</table>
+
+</td>
+<td align="center" valign="middle" style="padding:0 24px;">
+
+<sub><code>Rotate(90)</code></sub><br/>
+<sub><code>ColorChange(5, 8)</code></sub><br/>
+<h2>→</h2>
+
+</td>
+<td align="center" valign="middle">
+
+**Output**
+
+<table cellspacing="0" cellpadding="0" style="border-collapse:collapse;border:2px solid #888;margin:0 auto;">
+<tr><td width="20" height="20" style="width:20px;height:20px;background:#7FDBFF;border:1px solid #444;padding:0;line-height:0;font-size:0;"></td><td width="20" height="20" style="width:20px;height:20px;background:#7FDBFF;border:1px solid #444;padding:0;line-height:0;font-size:0;"></td><td width="20" height="20" style="width:20px;height:20px;background:#7FDBFF;border:1px solid #444;padding:0;line-height:0;font-size:0;"></td><td width="20" height="20" style="width:20px;height:20px;background:#7FDBFF;border:1px solid #444;padding:0;line-height:0;font-size:0;"></td><td width="20" height="20" style="width:20px;height:20px;background:#7FDBFF;border:1px solid #444;padding:0;line-height:0;font-size:0;"></td></tr>
+<tr><td width="20" height="20" style="width:20px;height:20px;background:#000000;border:1px solid #444;padding:0;line-height:0;font-size:0;"></td><td width="20" height="20" style="width:20px;height:20px;background:#000000;border:1px solid #444;padding:0;line-height:0;font-size:0;"></td><td width="20" height="20" style="width:20px;height:20px;background:#000000;border:1px solid #444;padding:0;line-height:0;font-size:0;"></td><td width="20" height="20" style="width:20px;height:20px;background:#000000;border:1px solid #444;padding:0;line-height:0;font-size:0;"></td><td width="20" height="20" style="width:20px;height:20px;background:#7FDBFF;border:1px solid #444;padding:0;line-height:0;font-size:0;"></td></tr>
+<tr><td width="20" height="20" style="width:20px;height:20px;background:#000000;border:1px solid #444;padding:0;line-height:0;font-size:0;"></td><td width="20" height="20" style="width:20px;height:20px;background:#000000;border:1px solid #444;padding:0;line-height:0;font-size:0;"></td><td width="20" height="20" style="width:20px;height:20px;background:#000000;border:1px solid #444;padding:0;line-height:0;font-size:0;"></td><td width="20" height="20" style="width:20px;height:20px;background:#000000;border:1px solid #444;padding:0;line-height:0;font-size:0;"></td><td width="20" height="20" style="width:20px;height:20px;background:#7FDBFF;border:1px solid #444;padding:0;line-height:0;font-size:0;"></td></tr>
+<tr><td width="20" height="20" style="width:20px;height:20px;background:#000000;border:1px solid #444;padding:0;line-height:0;font-size:0;"></td><td width="20" height="20" style="width:20px;height:20px;background:#000000;border:1px solid #444;padding:0;line-height:0;font-size:0;"></td><td width="20" height="20" style="width:20px;height:20px;background:#000000;border:1px solid #444;padding:0;line-height:0;font-size:0;"></td><td width="20" height="20" style="width:20px;height:20px;background:#000000;border:1px solid #444;padding:0;line-height:0;font-size:0;"></td><td width="20" height="20" style="width:20px;height:20px;background:#000000;border:1px solid #444;padding:0;line-height:0;font-size:0;"></td></tr>
+<tr><td width="20" height="20" style="width:20px;height:20px;background:#000000;border:1px solid #444;padding:0;line-height:0;font-size:0;"></td><td width="20" height="20" style="width:20px;height:20px;background:#000000;border:1px solid #444;padding:0;line-height:0;font-size:0;"></td><td width="20" height="20" style="width:20px;height:20px;background:#000000;border:1px solid #444;padding:0;line-height:0;font-size:0;"></td><td width="20" height="20" style="width:20px;height:20px;background:#000000;border:1px solid #444;padding:0;line-height:0;font-size:0;"></td><td width="20" height="20" style="width:20px;height:20px;background:#000000;border:1px solid #444;padding:0;line-height:0;font-size:0;"></td></tr>
+</table>
+
+</td>
+</tr>
+</table>
+
+<sub>A real program the engine can discover on this task — search finds <code>Rotate(90) → ColorChange(5, 8)</code> and confirms it against every training pair.</sub>
+
+<br/><br/>
 
 [![Python](https://img.shields.io/badge/Python-3.14+-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
 [![License](https://img.shields.io/badge/License-MIT-2E86AB?style=for-the-badge)](LICENSE)
@@ -11,9 +63,9 @@
 
 <sub>Given only a handful of input → output grid examples, this engine <b>searches for a program</b> that explains the transformation — no training, no neural nets, just search over a composable operation space.</sub>
 
-<br/><br/>
+<br/>
 
-<img src="https://readme-typing-svg.demolab.com/?lines=%F0%9F%A7%A9+Solve+visual+reasoning+puzzles+with+search;%F0%9F%94%8D+BFS+%E2%80%A2+GBFS+%E2%80%A2+A*+over+program+space;%F0%9F%8E%A8+Color+%E2%80%A2+Geometric+%E2%80%A2+Scaling+%E2%80%A2+Positional+ops;%E2%9A%99%EF%B8%8F+Zero+dependencies+%E2%80%94+pure+Python&font=Fira%20Code&center=true&width=650&height=45&color=FF6B35&vCenter=true&size=20" alt="typing banner"/>
+🧩 Solve visual reasoning puzzles with search &nbsp;•&nbsp; 🔍 BFS • GBFS • A* over program space &nbsp;•&nbsp; 🎨 Color • Geometric • Scaling • Positional ops &nbsp;•&nbsp; ⚙️ Zero dependencies — pure Python
 
 <br/>
 
@@ -71,6 +123,22 @@ This project takes a **program synthesis** approach instead of a learned one. Ra
 ---
 
 ## 🔬 How It Works
+
+```mermaid
+flowchart TD
+    A["Input → Output examples"] --> B["get_base_operations\n(task-grounded op set)"]
+    B --> C["Generate candidate programs"]
+    C --> D{"Search strategy"}
+    D -->|BFS| E["Level-by-level queue expansion"]
+    D -->|GBFS| F["Greedy heap, lowest h first"]
+    D -->|A*| G["Priority heap, f = g + h"]
+    F --> H["Heuristic scoring\nCell Mismatch / Color Dist / Meta"]
+    G --> H
+    E --> I["validate_program\nagainst every training pair"]
+    H --> I
+    I -->|all pairs match| J["Solution program found"]
+    I -->|no match yet| C
+```
 
 **1. Programs are operation trees.** A `Program` is either a primitive leaf (`ColorChange(0, 4)`) or a `Sequence` node chaining two programs together. Every program carries a **complexity** (operation count) and a **cost** (weighted sum from `Program.op_costs`) computed once at construction time.
 
@@ -262,6 +330,8 @@ MIT — see [LICENSE](LICENSE) for details.
 
 <br/>
 
-<img width="100%" src="https://capsule-render.vercel.app/api?type=waving&color=0:2E86AB,35:E63946,70:FF6B35,100:1E1E2F&height=120&section=footer" alt="footer" />
+<table cellspacing="0" cellpadding="0" style="border-collapse:collapse;margin:0 auto;"><tr><td width="16" height="16" style="width:16px;height:16px;background:#000000;padding:0;line-height:0;font-size:0;"></td><td width="16" height="16" style="width:16px;height:16px;background:#0074D9;padding:0;line-height:0;font-size:0;"></td><td width="16" height="16" style="width:16px;height:16px;background:#FF4136;padding:0;line-height:0;font-size:0;"></td><td width="16" height="16" style="width:16px;height:16px;background:#2ECC40;padding:0;line-height:0;font-size:0;"></td><td width="16" height="16" style="width:16px;height:16px;background:#FFDC00;padding:0;line-height:0;font-size:0;"></td><td width="16" height="16" style="width:16px;height:16px;background:#AAAAAA;padding:0;line-height:0;font-size:0;"></td><td width="16" height="16" style="width:16px;height:16px;background:#F012BE;padding:0;line-height:0;font-size:0;"></td><td width="16" height="16" style="width:16px;height:16px;background:#FF851B;padding:0;line-height:0;font-size:0;"></td><td width="16" height="16" style="width:16px;height:16px;background:#7FDBFF;padding:0;line-height:0;font-size:0;"></td><td width="16" height="16" style="width:16px;height:16px;background:#870C25;padding:0;line-height:0;font-size:0;"></td></tr></table>
+
+<sub>The full ARC-AGI palette</sub>
 
 </div>
