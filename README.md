@@ -7,12 +7,13 @@
 <br/>
 
 <!--
-  Hero visual: a literal ARC-AGI grid, rendered as an HTML table with
-  inline style="background:#hex" on each <td>. This is deliberate —
-  GitHub's markdown sanitizer strips the legacy bgcolor attribute, which
-  silently renders every cell blank. style="background:#hex" survives
-  sanitization, so this hero can never break the way an external
-  banner-rendering service can.
+  Hero visual: a literal ARC-AGI grid, rendered with colored square emoji
+  (⬛🟦🟥 …) instead of an HTML/CSS trick. GitHub's markdown sanitizer
+  strips both the legacy bgcolor attribute AND inline style="background:…"
+  from table cells — verified directly against the rendered DOM, both
+  render as blank cells. Emoji are plain text content, not an attribute,
+  so there is nothing for the sanitizer to strip. No external
+  image/service dependency, and this cannot silently break.
 -->
 <table>
 <tr>
@@ -20,19 +21,17 @@
 
 **Input**
 
-<table cellspacing="0" cellpadding="0" style="border-collapse:collapse;border:2px solid #888;margin:0 auto;">
-<tr><td width="20" height="20" style="width:20px;height:20px;background:#AAAAAA;border:1px solid #444;padding:0;line-height:0;font-size:0;"></td><td width="20" height="20" style="width:20px;height:20px;background:#AAAAAA;border:1px solid #444;padding:0;line-height:0;font-size:0;"></td><td width="20" height="20" style="width:20px;height:20px;background:#AAAAAA;border:1px solid #444;padding:0;line-height:0;font-size:0;"></td><td width="20" height="20" style="width:20px;height:20px;background:#000000;border:1px solid #444;padding:0;line-height:0;font-size:0;"></td><td width="20" height="20" style="width:20px;height:20px;background:#000000;border:1px solid #444;padding:0;line-height:0;font-size:0;"></td></tr>
-<tr><td width="20" height="20" style="width:20px;height:20px;background:#AAAAAA;border:1px solid #444;padding:0;line-height:0;font-size:0;"></td><td width="20" height="20" style="width:20px;height:20px;background:#000000;border:1px solid #444;padding:0;line-height:0;font-size:0;"></td><td width="20" height="20" style="width:20px;height:20px;background:#000000;border:1px solid #444;padding:0;line-height:0;font-size:0;"></td><td width="20" height="20" style="width:20px;height:20px;background:#000000;border:1px solid #444;padding:0;line-height:0;font-size:0;"></td><td width="20" height="20" style="width:20px;height:20px;background:#000000;border:1px solid #444;padding:0;line-height:0;font-size:0;"></td></tr>
-<tr><td width="20" height="20" style="width:20px;height:20px;background:#AAAAAA;border:1px solid #444;padding:0;line-height:0;font-size:0;"></td><td width="20" height="20" style="width:20px;height:20px;background:#000000;border:1px solid #444;padding:0;line-height:0;font-size:0;"></td><td width="20" height="20" style="width:20px;height:20px;background:#000000;border:1px solid #444;padding:0;line-height:0;font-size:0;"></td><td width="20" height="20" style="width:20px;height:20px;background:#000000;border:1px solid #444;padding:0;line-height:0;font-size:0;"></td><td width="20" height="20" style="width:20px;height:20px;background:#000000;border:1px solid #444;padding:0;line-height:0;font-size:0;"></td></tr>
-<tr><td width="20" height="20" style="width:20px;height:20px;background:#AAAAAA;border:1px solid #444;padding:0;line-height:0;font-size:0;"></td><td width="20" height="20" style="width:20px;height:20px;background:#000000;border:1px solid #444;padding:0;line-height:0;font-size:0;"></td><td width="20" height="20" style="width:20px;height:20px;background:#000000;border:1px solid #444;padding:0;line-height:0;font-size:0;"></td><td width="20" height="20" style="width:20px;height:20px;background:#000000;border:1px solid #444;padding:0;line-height:0;font-size:0;"></td><td width="20" height="20" style="width:20px;height:20px;background:#000000;border:1px solid #444;padding:0;line-height:0;font-size:0;"></td></tr>
-<tr><td width="20" height="20" style="width:20px;height:20px;background:#AAAAAA;border:1px solid #444;padding:0;line-height:0;font-size:0;"></td><td width="20" height="20" style="width:20px;height:20px;background:#000000;border:1px solid #444;padding:0;line-height:0;font-size:0;"></td><td width="20" height="20" style="width:20px;height:20px;background:#000000;border:1px solid #444;padding:0;line-height:0;font-size:0;"></td><td width="20" height="20" style="width:20px;height:20px;background:#000000;border:1px solid #444;padding:0;line-height:0;font-size:0;"></td><td width="20" height="20" style="width:20px;height:20px;background:#000000;border:1px solid #444;padding:0;line-height:0;font-size:0;"></td></tr>
-</table>
+🟦🟦🟦⬛⬛<br/>
+🟦⬛⬛⬛⬛<br/>
+🟦⬛⬛⬛⬛<br/>
+🟦⬛⬛⬛⬛<br/>
+🟦⬛⬛⬛⬛
 
 </td>
-<td align="center" valign="middle" style="padding:0 24px;">
+<td align="center" valign="middle">
 
 <sub><code>Rotate(90)</code></sub><br/>
-<sub><code>ColorChange(5, 8)</code></sub><br/>
+<sub><code>ColorChange(1, 2)</code></sub><br/>
 <h2>→</h2>
 
 </td>
@@ -40,19 +39,17 @@
 
 **Output**
 
-<table cellspacing="0" cellpadding="0" style="border-collapse:collapse;border:2px solid #888;margin:0 auto;">
-<tr><td width="20" height="20" style="width:20px;height:20px;background:#7FDBFF;border:1px solid #444;padding:0;line-height:0;font-size:0;"></td><td width="20" height="20" style="width:20px;height:20px;background:#7FDBFF;border:1px solid #444;padding:0;line-height:0;font-size:0;"></td><td width="20" height="20" style="width:20px;height:20px;background:#7FDBFF;border:1px solid #444;padding:0;line-height:0;font-size:0;"></td><td width="20" height="20" style="width:20px;height:20px;background:#7FDBFF;border:1px solid #444;padding:0;line-height:0;font-size:0;"></td><td width="20" height="20" style="width:20px;height:20px;background:#7FDBFF;border:1px solid #444;padding:0;line-height:0;font-size:0;"></td></tr>
-<tr><td width="20" height="20" style="width:20px;height:20px;background:#000000;border:1px solid #444;padding:0;line-height:0;font-size:0;"></td><td width="20" height="20" style="width:20px;height:20px;background:#000000;border:1px solid #444;padding:0;line-height:0;font-size:0;"></td><td width="20" height="20" style="width:20px;height:20px;background:#000000;border:1px solid #444;padding:0;line-height:0;font-size:0;"></td><td width="20" height="20" style="width:20px;height:20px;background:#000000;border:1px solid #444;padding:0;line-height:0;font-size:0;"></td><td width="20" height="20" style="width:20px;height:20px;background:#7FDBFF;border:1px solid #444;padding:0;line-height:0;font-size:0;"></td></tr>
-<tr><td width="20" height="20" style="width:20px;height:20px;background:#000000;border:1px solid #444;padding:0;line-height:0;font-size:0;"></td><td width="20" height="20" style="width:20px;height:20px;background:#000000;border:1px solid #444;padding:0;line-height:0;font-size:0;"></td><td width="20" height="20" style="width:20px;height:20px;background:#000000;border:1px solid #444;padding:0;line-height:0;font-size:0;"></td><td width="20" height="20" style="width:20px;height:20px;background:#000000;border:1px solid #444;padding:0;line-height:0;font-size:0;"></td><td width="20" height="20" style="width:20px;height:20px;background:#7FDBFF;border:1px solid #444;padding:0;line-height:0;font-size:0;"></td></tr>
-<tr><td width="20" height="20" style="width:20px;height:20px;background:#000000;border:1px solid #444;padding:0;line-height:0;font-size:0;"></td><td width="20" height="20" style="width:20px;height:20px;background:#000000;border:1px solid #444;padding:0;line-height:0;font-size:0;"></td><td width="20" height="20" style="width:20px;height:20px;background:#000000;border:1px solid #444;padding:0;line-height:0;font-size:0;"></td><td width="20" height="20" style="width:20px;height:20px;background:#000000;border:1px solid #444;padding:0;line-height:0;font-size:0;"></td><td width="20" height="20" style="width:20px;height:20px;background:#000000;border:1px solid #444;padding:0;line-height:0;font-size:0;"></td></tr>
-<tr><td width="20" height="20" style="width:20px;height:20px;background:#000000;border:1px solid #444;padding:0;line-height:0;font-size:0;"></td><td width="20" height="20" style="width:20px;height:20px;background:#000000;border:1px solid #444;padding:0;line-height:0;font-size:0;"></td><td width="20" height="20" style="width:20px;height:20px;background:#000000;border:1px solid #444;padding:0;line-height:0;font-size:0;"></td><td width="20" height="20" style="width:20px;height:20px;background:#000000;border:1px solid #444;padding:0;line-height:0;font-size:0;"></td><td width="20" height="20" style="width:20px;height:20px;background:#000000;border:1px solid #444;padding:0;line-height:0;font-size:0;"></td></tr>
-</table>
+🟥🟥🟥🟥🟥<br/>
+⬛⬛⬛⬛🟥<br/>
+⬛⬛⬛⬛🟥<br/>
+⬛⬛⬛⬛⬛<br/>
+⬛⬛⬛⬛⬛
 
 </td>
 </tr>
 </table>
 
-<sub>A real program the engine can discover on this task — search finds <code>Rotate(90) → ColorChange(5, 8)</code> and confirms it against every training pair.</sub>
+<sub>A real program the engine can discover — search finds <code>Rotate(90) → ColorChange(1, 2)</code> and confirms it against every training pair.</sub>
 
 <br/><br/>
 
@@ -330,8 +327,8 @@ MIT — see [LICENSE](LICENSE) for details.
 
 <br/>
 
-<table cellspacing="0" cellpadding="0" style="border-collapse:collapse;margin:0 auto;"><tr><td width="16" height="16" style="width:16px;height:16px;background:#000000;padding:0;line-height:0;font-size:0;"></td><td width="16" height="16" style="width:16px;height:16px;background:#0074D9;padding:0;line-height:0;font-size:0;"></td><td width="16" height="16" style="width:16px;height:16px;background:#FF4136;padding:0;line-height:0;font-size:0;"></td><td width="16" height="16" style="width:16px;height:16px;background:#2ECC40;padding:0;line-height:0;font-size:0;"></td><td width="16" height="16" style="width:16px;height:16px;background:#FFDC00;padding:0;line-height:0;font-size:0;"></td><td width="16" height="16" style="width:16px;height:16px;background:#AAAAAA;padding:0;line-height:0;font-size:0;"></td><td width="16" height="16" style="width:16px;height:16px;background:#F012BE;padding:0;line-height:0;font-size:0;"></td><td width="16" height="16" style="width:16px;height:16px;background:#FF851B;padding:0;line-height:0;font-size:0;"></td><td width="16" height="16" style="width:16px;height:16px;background:#7FDBFF;padding:0;line-height:0;font-size:0;"></td><td width="16" height="16" style="width:16px;height:16px;background:#870C25;padding:0;line-height:0;font-size:0;"></td></tr></table>
+⬛🟦🟥🟩🟨⬜🟪🟧🟫
 
-<sub>The full ARC-AGI palette</sub>
+<sub>Colors from the ARC-AGI palette</sub>
 
 </div>
