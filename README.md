@@ -1,95 +1,132 @@
-
 <div align="center">
 
-# 🧩 ARC-AGI Program Synthesis Engine
+<img width="100%" src="https://capsule-render.vercel.app/api?type=waving&color=0:1E1E2F,35:FF6B35,70:E63946,100:2E86AB&height=210&section=header&text=ARC-AGI%20Program%20Synthesis&fontSize=40&fontColor=FFFFFF&animation=fadeIn&fontAlignY=38&desc=Automated%20Visual%20Reasoning%20Through%20Intelligent%20Program%20Search&descAlignY=58&descSize=17&descColor=F5F5F5" alt="banner" />
 
-### *Automated Visual Reasoning Through Intelligent Search*
+<br/>
 
 [![Python](https://img.shields.io/badge/Python-3.14+-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
-[![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
-[![ARC-AGI](https://img.shields.io/badge/Benchmark-ARC--AGI-orange?style=for-the-badge)](https://arcprize.org/)
+[![License](https://img.shields.io/badge/License-MIT-2E86AB?style=for-the-badge)](LICENSE)
+[![ARC-AGI](https://img.shields.io/badge/Benchmark-ARC--AGI-FF6B35?style=for-the-badge)](https://arcprize.org/)
+[![Dependencies](https://img.shields.io/badge/Dependencies-None-E63946?style=for-the-badge)](program.py)
 
-*An advanced program synthesis system that automatically discovers transformation programs to solve abstract visual reasoning tasks from the ARC-AGI benchmark.*
+<sub>Given only a handful of input → output grid examples, this engine <b>searches for a program</b> that explains the transformation — no training, no neural nets, just search over a composable operation space.</sub>
 
-[Features](#-features) • [How It Works](#-how-it-works) • [Quick Start](#-quick-start) • [Algorithms](#-algorithms) • [Results](#-results) • [Architecture](#-architecture)
+<br/><br/>
+
+<img src="https://readme-typing-svg.demolab.com/?lines=%F0%9F%A7%A9+Solve+visual+reasoning+puzzles+with+search;%F0%9F%94%8D+BFS+%E2%80%A2+GBFS+%E2%80%A2+A*+over+program+space;%F0%9F%8E%A8+Color+%E2%80%A2+Geometric+%E2%80%A2+Scaling+%E2%80%A2+Positional+ops;%E2%9A%99%EF%B8%8F+Zero+dependencies+%E2%80%94+pure+Python&font=Fira%20Code&center=true&width=650&height=45&color=FF6B35&vCenter=true&size=20" alt="typing banner"/>
+
+<br/>
+
+**[Overview](#-overview) • [Features](#-features) • [How It Works](#-how-it-works) • [Algorithms](#-algorithms) • [Results](#-results) • [Architecture](#-architecture) • [Quick Start](#-quick-start)**
 
 </div>
 
----
+<br/>
 
 ## 🎯 Overview
 
-This project implements a **complete program synthesis pipeline** that learns to solve visual transformation puzzles through intelligent search. Given input-output examples, the system automatically constructs sequences of operations (color changes, rotations, scaling, reflections) that correctly transform the input into the output.
+The **ARC-AGI (Abstraction and Reasoning Corpus)** benchmark presents small grids of colored cells and asks: *given a few examples of an input grid becoming an output grid, what's the rule?* It's one of the sharper tests of general visual reasoning — the transformations are trivial for humans to spot and brutal for most ML systems to generalize.
 
-### The Challenge
+This project takes a **program synthesis** approach instead of a learned one. Rather than training a model to predict pixels, it searches a space of composable grid operations — rotations, reflections, color remaps, scaling, shifts — for a short *program* that reproduces every training example exactly. If that program also solves the held-out test grid, the puzzle is solved.
 
-The **ARC-AGI (Abstraction and Reasoning Corpus)** is a benchmark designed to measure artificial general intelligence through visual reasoning tasks. Each task presents a few training examples and requires synthesizing a program that generalizes to unseen test cases — a fundamental challenge in AI reasoning.
-
-### The Solution
-
-This engine explores the space of possible programs using three search strategies:
-- **BFS** — Systematic breadth-first exploration
-- **GBFS** — Heuristic-guided greedy search  
-- **A*** — Optimal search with cost-aware heuristics
+> Programs are literal, inspectable sequences like `Rotate(90) -> ColorChange(5, 8)` — not opaque weights. Every solution the engine finds is a symbolic explanation of the transformation.
 
 ---
 
 ## ✨ Features
 
-🔍 **Intelligent Search Algorithms**
-- Three configurable search strategies with performance comparison
-- Admissible heuristics for optimal solution discovery
-- Efficient state space exploration with pruning
+<table>
+<tr>
+<td width="50%" valign="top">
 
-🎨 **Rich Operation Set**
-- Color transformations (change, swap, map)
-- Geometric operations (rotate, mirror, scale, reflect)
-- Positional shifts and irregular resizing
-- 13+ primitive operations composable into complex programs
+**🔍 Intelligent Search**
+- Three configurable strategies — BFS, GBFS, A* — sharing one validation core
+- Admissible heuristics that guarantee A* never overshoots the optimal program
+- Priority-queue expansion with visited-state deduplication for A*
 
-📊 **Comprehensive Benchmarking**
-- Performance metrics (solution rate, training time, solve time)
-- Multiple heuristic comparisons (cell mismatch, color distribution, meta)
-- Real-time progress monitoring with detailed statistics
+**🎨 Rich Operation Set**
+- Color transforms: `ColorChange`, `SwapColors`, `ColorMapMultiple`
+- Geometry: `Mirror`, `Rotate`, `DiagonalReflection`
+- Scaling: `Scale2x2`, `Scale3x3`, `Scale2x1`, `Scale1x2`
+- Positional: `PositionalShift`, `ResizeIrregular`
 
-⚙️ **Highly Configurable**
-- Weighted operation costs for fine-tuned search
-- Pluggable heuristic functions
-- Adjustable complexity limits
-- No external dependencies — pure Python implementation
+</td>
+<td width="50%" valign="top">
+
+**📊 Built-in Benchmarking**
+- Head-to-head comparison across all algorithm/heuristic pairs
+- Tracks train time, solve time, solution count, and success rate
+- Live progress output while search runs
+
+**⚙️ Highly Configurable**
+- Per-operation cost weights (`Program.op_costs`) tune what A* prefers
+- Pluggable heuristic functions — drop in your own
+- Adjustable `max_complexity` search-depth cap
+- Zero external dependencies — pure standard-library Python
+
+</td>
+</tr>
+</table>
 
 ---
 
-## 🚀 Quick Start
+## 🔬 How It Works
 
-### Prerequisites
-```bash
-Python 3.14+ (recommended)
-No external libraries required!
+**1. Programs are operation trees.** A `Program` is either a primitive leaf (`ColorChange(0, 4)`) or a `Sequence` node chaining two programs together. Every program carries a **complexity** (operation count) and a **cost** (weighted sum from `Program.op_costs`) computed once at construction time.
+
+**2. Base operations are derived from the task itself.** `Operations.get_base_operations` inspects the actual colors and dimensions in the first training pair — it only proposes `ColorChange(3, 7)` if colors 3 and 7 are actually involved, only proposes scaling ops if the grid dimensions actually change, only proposes `DiagonalReflection` when a diagonal-swap pattern is detected. This keeps the branch factor grounded in the puzzle instead of exploding combinatorially.
+
+**3. Search expands sequences of these operations,** validating each candidate by applying it to *every* training input and checking for an exact grid match (`Search.validate_program`). The first program that satisfies all training examples is returned and then re-checked against the held-out test example.
+
+```python
+program = Program('Sequence',
+    Program('Rotate', right=90),
+    Program('ColorChange', right=[0, 4])
+)
+grid_out = program.apply_program(grid_in)
 ```
 
-### Installation
+### Heuristic Functions
 
-```bash
-# Clone the repository
-git clone https://github.com/AlaqmarG/arc-agi-program-synthesis.git
-cd arc-agi-program-synthesis
+| Heuristic | Idea |
+|---|---|
+| **Cell Mismatch Sum** | Counts per-cell differences between predicted and target grids, plus shape-mismatch penalties |
+| **Color Distribution Shape** | Minimum operations implied by size differences and missing target colors — admissible by construction |
+| **Meta Heuristic** | `max(mismatch, color_dist)` — combining two admissible heuristics without losing admissibility |
+
+---
+
+## 🧠 Algorithms
+
+<table>
+<tr><th>Algorithm</th><th>Guarantee</th><th>Strategy</th><th>Best For</th></tr>
+<tr>
+<td><b>BFS</b></td>
+<td>Complete</td>
+<td>Systematic level-by-level queue expansion</td>
+<td>Finding the shortest possible program</td>
+</tr>
+<tr>
+<td><b>GBFS</b></td>
+<td>Fast, not optimal</td>
+<td>Greedily expands the lowest-<code>h</code> state on a heap</td>
+<td>Quick solutions when optimality doesn't matter</td>
+</tr>
+<tr>
+<td><b>A*</b></td>
+<td>Optimal (admissible <code>h</code>)</td>
+<td>Ranks by <code>f = g + h</code>, dedupes visited states</td>
+<td>Cost-optimal programs, efficiently</td>
+</tr>
+</table>
+
+---
+
+## 📊 Results
+
+`index.py` runs all seven algorithm/heuristic combinations back-to-back across the 28-task benchmark set and prints a comparison table:
+
 ```
-
-### Run Benchmarks
-
-```bash
-python index.py
-```
-
-### Expected Output
-
-```
-BFS: Solved 01f4a4a5 with ColorChange(0, 4)
-GBFS (Cell): Solved 0e206a2e with Rotate(90) -> ColorChange(5, 8)
-A* (Meta): Solved 1f0c79e5 with Mirror(horizontal) -> SwapColors(2, 3)
-...
-
 ====================================================================
 | Algorithm    | Avg Train Time | Avg Solve Time | Num Sol | Sol % |
 ====================================================================
@@ -105,77 +142,10 @@ A* (Meta): Solved 1f0c79e5 with Mirror(horizontal) -> SwapColors(2, 3)
 ====================================================================
 ```
 
----
-
-## 🔬 How It Works
-
-### Program Representation
-
-Programs are represented as **operation trees** where:
-- **Leaf nodes** are primitive operations (e.g., `ColorChange(0, 4)`)
-- **Internal nodes** are sequences (e.g., `Rotate(90) -> Mirror(horizontal)`)
-- Each program has a **complexity** (operation count) and **cost** (weighted sum)
-
-### Search Process
-
-1. **Generate Base Operations** — Extract relevant operations from training examples
-2. **Search Initialization** — Start with primitive operations (complexity 1)
-3. **State Expansion** — Sequence new operations to existing programs
-4. **Validation** — Test candidate programs against all training examples
-5. **Solution** — Return first program that generalizes to all examples
-
-### Heuristic Functions
-
-**Cell Mismatch Sum** — Counts differences between predicted and target grids
-```python
-h = Σ(mismatches + size_penalties)
-```
-
-**Color Distribution Shape** — Minimum operations needed for color/shape transformation
-```python
-h = max(min_operations_per_example)
-```
-
-**Meta Heuristic** — Combines multiple heuristics for robust guidance
-```python
-h = max(h_mismatch, h_color)
-```
-
----
-
-## 🧠 Algorithms
-
-### Breadth-First Search (BFS)
-- **Guarantee:** Complete — finds solution if one exists
-- **Strategy:** Systematic level-by-level exploration
-- **Best for:** Finding shortest programs (minimum complexity)
-
-### Greedy Best-First Search (GBFS)
-- **Guarantee:** Fast but not optimal
-- **Strategy:** Expands most promising states first using heuristic
-- **Best for:** Quick solutions when optimality isn't critical
-
-### A* Search
-- **Guarantee:** Optimal with admissible heuristics
-- **Strategy:** Balances actual cost (g) and estimated remaining cost (h)
-- **Best for:** Finding cost-optimal solutions efficiently
-
----
-
-## 📊 Results
-
-Performance varies by algorithm and heuristic choice. Typical results on 28 benchmark tasks:
-
-| Metric | BFS | GBFS (Meta) | A* (Meta) |
-|--------|-----|-------------|-----------|
-| **Solution Rate** | ~65% | ~79% | ~82% |
-| **Avg Training Time** | 12.5ms | 7.8ms | 7.2ms |
-| **Solutions Found** | 18/28 | 22/28 | 23/28 |
-
-**Key Findings:**
-- A* with meta-heuristic achieves best overall performance
-- Heuristic choice significantly impacts solution rate
-- All algorithms solve within milliseconds per task
+**Key findings:**
+- **A\* with the meta-heuristic wins overall** — best solve rate *and* fastest average training time, since good guidance prunes the search tree rather than just ranking it.
+- Heuristic choice matters more than algorithm choice — swapping the heuristic under GBFS or A* moves the solve rate by up to ~7 points.
+- Every strategy here trains in single-digit-to-low-double-digit milliseconds and validates a found program in nanoseconds — the search space stays small because base operations are derived per-task rather than enumerated globally.
 
 ---
 
@@ -184,119 +154,76 @@ Performance varies by algorithm and heuristic choice. Typical results on 28 benc
 ```
 arc-agi-program-synthesis/
 │
-├── index.py              # Main entry point & benchmarking
-├── program.py            # Program representation & execution
-├── search.py             # BFS, GBFS, A* implementations
-├── heuristics.py         # Admissible heuristic functions
-├── operations.py         # Base operation generation
-├── data.py               # Data loading utilities
+├── index.py              # Benchmark driver — runs & compares all strategies
+├── program.py             # Program tree: representation, cost model, execution
+├── search.py               # BFS, GBFS, A* implementations + validation
+├── heuristics.py           # Admissible heuristic functions
+├── operations.py           # Task-grounded base operation generation
+├── data.py                 # Benchmark data loading
 │
 └── benchmark/
     ├── arc-agi_challenges.json    # 28 visual reasoning tasks
     └── arc-agi_solutions.json     # Ground truth solutions
 ```
 
-### Core Components
+### Operation Set
 
-**`Program`** — Represents operation sequences with cost model
-```python
-program = Program('Sequence', 
-    Program('Rotate', right=90),
-    Program('ColorChange', right=[0, 4])
-)
-```
+| Category | Operations | What it does |
+|---|---|---|
+| **Color** | `ColorChange`, `SwapColors`, `ColorMapMultiple` | Remap pixel colors |
+| **Geometric** | `Rotate`, `Mirror`, `DiagonalReflection` | Transform grid orientation |
+| **Scaling** | `Scale2x2`, `Scale3x3`, `Scale2x1`, `Scale1x2` | Resize grids uniformly |
+| **Positional** | `PositionalShift`, `ResizeIrregular` | Move or reshape elements |
 
-**`Search`** — Implements three search algorithms with validation
-```python
-solution = search.a_star_search(train_data, heuristic_fn)
-```
+### Cost Model
 
-**`Heuristics`** — Provides guidance functions for informed search
-```python
-h_value = heuristics.meta_heuristic(program, train_data)
-```
-
-**`Operations`** — Generates problem-specific base operations
-```python
-base_ops = operations.get_base_operations(input_grid, output_grid)
-```
+Every operation has a weight in `Program.op_costs` — `1` for simple ops like `ColorChange`/`Rotate`/`Mirror`, `2` for structural ops like scaling/shifting/diagonal reflection, `3` for the compound `ScaleWithColorMap`. A sequence's `complexity` is its operation count; its `cost` is the weighted sum used as `g` in A*. Both are computed once, at `Program` construction — no re-traversal during search.
 
 ---
 
-## 🎓 Technical Highlights
+## 🎓 Design Notes
 
-### Operation Set
+- **Admissibility is load-bearing.** Every heuristic returns `min_ops` derived from *provable* lower bounds (a color missing from the prediction requires at least one op; a size mismatch requires at least one op) — never a guess. That's what lets A* claim optimality rather than just "probably good."
+- **Base operations are per-task, not global.** `Operations.get_base_operations` only proposes color changes between colors that actually appear, only proposes scaling when dimensions actually differ, and shuffles the candidate order to avoid systematic bias — keeping branching factor proportional to the puzzle, not the color palette.
+- **No dependencies, no training.** The entire engine is standard-library Python. There's no model to fit — correctness comes from exhaustive-but-pruned search over a space that's small because it's task-specific.
 
-| Category | Operations | Description |
-|----------|-----------|-------------|
-| **Color** | `ColorChange`, `SwapColors`, `ColorMapMultiple` | Modify pixel colors |
-| **Geometric** | `Rotate`, `Mirror`, `DiagonalReflection` | Transform grid geometry |
-| **Scaling** | `Scale2x2`, `Scale3x3`, `Scale2x1`, `Scale1x2` | Resize grids uniformly |
-| **Positional** | `PositionalShift`, `ResizeIrregular` | Move/resize elements |
+---
 
-### Complexity & Cost Model
+<details>
+<summary><h2>🚀 Quick Start</h2></summary>
 
-- **Complexity:** Number of operations in sequence (affects search depth)
-- **Cost:** Weighted sum based on operation difficulty (affects A* ordering)
-- **Configurable:** Adjust weights via `Program.op_costs` dictionary
+**Requirements:** Python 3.14+, no external libraries.
 
-### Admissibility Guarantee
+```bash
+git clone https://github.com/AlaqmarG/arc-agi-program-synthesis.git
+cd arc-agi-program-synthesis
+python index.py
+```
 
-All heuristics are **admissible** (never overestimate):
-- Ensures A* finds optimal solutions
-- Based on minimum operations needed
-- Validated through extensive testing
+This runs BFS, GBFS, and A* (each with all three heuristics where applicable) across the 28-task benchmark set and prints the comparison table shown above.
+
+**Tuning knobs:**
+```python
+# program.py — reweight operation costs
+Program.op_costs = {'ColorChange': 1, 'Rotate': 1, 'Scale2x2': 2, ...}
+
+# search.py — cap search depth
+search.bfs(train_data, max_complexity=4)
+```
+
+**Adding a heuristic** — implement `def my_heuristic(self, program, train)` in `heuristics.py` returning an admissible estimate, then pass it to `gbfs_search` / `a_star_search`.
+
+</details>
 
 ---
 
 ## 🎯 Use Cases
 
-**🔬 Research**
-- Study program synthesis techniques
-- Experiment with search algorithms
-- Design novel heuristics
-
-**📚 Education**
-- Learn AI search algorithms
-- Understand heuristic design
-- Explore automated reasoning
-
-**🧪 Experimentation**
-- Add new operations
-- Tune cost models
-- Benchmark custom heuristics
-
----
-
-## 🔧 Configuration
-
-### Adjusting Operation Costs
-
-Edit `Program.op_costs` in `program.py`:
-```python
-op_costs = {
-    'ColorChange': 1,      # Simple operations
-    'Rotate': 1,
-    'Scale2x2': 2,         # Medium complexity
-    'ScaleWithColorMap': 3 # High complexity
-}
-```
-
-### Adding Custom Heuristics
-
-Implement in `heuristics.py`:
-```python
-def my_heuristic(self, program, train):
-    # Your heuristic logic here
-    return estimated_cost
-```
-
-### Limiting Search Space
-
-Adjust `max_complexity` parameter:
-```python
-solution = search.bfs(train_data, max_complexity=4)
-```
+| 🔬 Research | 📚 Education | 🧪 Experimentation |
+|---|---|---|
+| Study program synthesis techniques | Learn classical AI search algorithms | Add new operations |
+| Compare search strategies head-to-head | Understand admissible heuristic design | Tune cost models |
+| Design and validate novel heuristics | Explore symbolic vs. learned reasoning | Benchmark custom heuristics |
 
 ---
 
@@ -313,39 +240,28 @@ solution = search.bfs(train_data, max_complexity=4)
 
 ## 🤝 Contributing
 
-Contributions are welcome! Areas of interest:
-- New operation implementations
-- Novel heuristic functions
-- Performance optimizations
-- Extended benchmarks
-- Documentation improvements
-
----
-
-## 📝 License
-
-This project is licensed under the MIT License — see LICENSE file for details.
-
----
-
-## 🙏 Acknowledgments
-
-- **ARC-AGI Benchmark** by François Chollet — foundational dataset for visual reasoning
-- **Program Synthesis Research** — inspiration from decades of AI reasoning work
-- **Search Algorithms** — classical AI techniques applied to modern challenges
-
----
-
-## 📧 Contact
-
-**Alaqmar G** — [@AlaqmarG](https://github.com/AlaqmarG)
-
-⭐ **If you find this project interesting, please star the repository!**
+Contributions are welcome — new operations, novel heuristics, performance work, expanded benchmarks, and documentation are all fair game. Open an issue or PR.
 
 ---
 
 <div align="center">
 
-*Built with 🧠 for advancing automated reasoning*
+## 📝 License
+
+MIT — see [LICENSE](LICENSE) for details.
+
+### 🙏 Acknowledgments
+
+**ARC-AGI Benchmark** by François Chollet, foundational to visual reasoning research · Classical AI search algorithms applied to a modern challenge
+
+<br/>
+
+**Alaqmar G** — [@AlaqmarG](https://github.com/AlaqmarG)
+
+⭐ If this project is interesting to you, consider starring the repo.
+
+<br/>
+
+<img width="100%" src="https://capsule-render.vercel.app/api?type=waving&color=0:2E86AB,35:E63946,70:FF6B35,100:1E1E2F&height=120&section=footer" alt="footer" />
 
 </div>
