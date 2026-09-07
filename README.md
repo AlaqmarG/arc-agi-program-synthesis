@@ -25,6 +25,12 @@ This project implements a **complete program synthesis pipeline** that learns to
 
 The **ARC-AGI (Abstraction and Reasoning Corpus)** is a benchmark designed to measure artificial general intelligence through visual reasoning tasks. Each task presents a few training examples and requires synthesizing a program that generalizes to unseen test cases — a fundamental challenge in AI reasoning.
 
+> **About the bundled task set.** The 28 tasks in `benchmark/` follow the ARC-AGI JSON
+> format but are a simplified set: grids run 1x1 to 7x7 with 1-2 training pairs, against
+> the official corpus's grids of up to 30x30 with 3-5 pairs. They are sized for a
+> search space built from single-step grid operations, so the solve rates below are
+> **not** comparable to scores reported on the official ARC-AGI evaluation sets.
+
 ### The Solution
 
 This engine explores the space of possible programs using three search strategies:
@@ -93,15 +99,15 @@ A* (Meta): Solved 1f0c79e5 with Mirror(horizontal) -> SwapColors(2, 3)
 ====================================================================
 | Algorithm    | Avg Train Time | Avg Solve Time | Num Sol | Sol % |
 ====================================================================
-| BFS          |      12543μs   |        123ns   | 18/28   | 64.3% |
+| BFS          |        97059μs |         9327ns | 19/28   | 67.9% |
 |--------------|----------------|----------------|---------|-------|
-| GBFS (Cell)  |       8921μs   |        156ns   | 20/28   | 71.4% |
-| GBFS (Color) |       9234μs   |        145ns   | 19/28   | 67.9% |
-| GBFS (Meta)  |       7845μs   |        134ns   | 22/28   | 78.6% |
+| GBFS (Cell)  |         9036μs |         8640ns | 20/28   | 71.4% |
+| GBFS (Color) |        13827μs |         8049ns | 19/28   | 67.9% |
+| GBFS (Meta)  |        15772μs |         9460ns | 20/28   | 71.4% |
 |--------------|----------------|----------------|---------|-------|
-| A* (Cell)    |       8123μs   |        129ns   | 21/28   | 75.0% |
-| A* (Color)   |       8456μs   |        141ns   | 20/28   | 71.4% |
-| A* (Meta)    |       7234μs   |        127ns   | 23/28   | 82.1% |
+| A* (Cell)    |         5392μs |         7544ns | 20/28   | 71.4% |
+| A* (Color)   |        17734μs |         7267ns | 20/28   | 71.4% |
+| A* (Meta)    |         9885μs |         7477ns | 20/28   | 71.4% |
 ====================================================================
 ```
 
@@ -164,18 +170,26 @@ h = max(h_mismatch, h_color)
 
 ## 📊 Results
 
-Performance varies by algorithm and heuristic choice. Typical results on 28 benchmark tasks:
+Measured over the 28 bundled tasks. Ranges are across repeated runs on the same
+machine (Apple Silicon, CPython 3.13); solve counts move by one task between runs
+because ties in the frontier are broken by insertion order.
 
 | Metric | BFS | GBFS (Meta) | A* (Meta) |
 |--------|-----|-------------|-----------|
-| **Solution Rate** | ~65% | ~79% | ~82% |
-| **Avg Training Time** | 12.5ms | 7.8ms | 7.2ms |
-| **Solutions Found** | 18/28 | 22/28 | 23/28 |
+| **Solution Rate** | 67.9% | 71.4% | 71.4% |
+| **Solutions Found** | 19/28 | 20/28 | 20/28 |
+| **Avg Training Time** | ~97-100ms | ~14-16ms | ~10ms |
 
-**Key Findings:**
-- A* with meta-heuristic achieves best overall performance
-- Heuristic choice significantly impacts solution rate
-- All algorithms solve within milliseconds per task
+**What the numbers show:**
+- **Every configuration lands in the same 19-20/28 band.** Neither the heuristic nor
+  the search strategy changes which tasks get solved: the 8-9 unsolved tasks need
+  transformations outside the operation set, so no amount of search finds them.
+- **The heuristics buy time, not coverage.** BFS spends ~97ms per task expanding the
+  frontier in complexity order; the guided searches reach the same answers in 5-18ms.
+  That is the real result here — a 6-10x search-time reduction at equal solve rate.
+- **Ranking between the guided configurations is noise.** Runs disagree about which
+  of them scores 19 vs 20, so the gaps between them are not meaningful at n=28.
+- Solve time (applying a found program) is nanoseconds; all the cost is in search.
 
 ---
 
@@ -192,7 +206,7 @@ arc-agi-program-synthesis/
 ├── data.py               # Data loading utilities
 │
 └── benchmark/
-    ├── arc-agi_challenges.json    # 28 visual reasoning tasks
+    ├── arc-agi_challenges.json    # 28 tasks, ARC-AGI format
     └── arc-agi_solutions.json     # Ground truth solutions
 ```
 
